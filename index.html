@@ -12,6 +12,12 @@
 
     <div class="container">
         <div class="swipeSlider" id="a"></div>
+
+        <div class="slideSwell" id="testSlideSwell" style="height: 600px;">
+            <img src="./assets/test1.jpg"/>
+            <img src="./assets/test2.jpg"/>
+            <img src="./assets/test3.jpg"/>
+        </div>
     </div>
 
 <script src="swipeSlider.js"></script>
@@ -40,6 +46,8 @@
     //$( document ).ready( function() {
     document.addEventListener('DOMContentLoaded', swipeSlider.setUp( testSlider ) );
     //});
+
+    newSlideSwell("testSlideSwell");
 
 </script>
 </body>
