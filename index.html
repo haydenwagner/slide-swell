@@ -1,0 +1,50 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>The HTML5 Herald</title>
+    <!--<link rel="stylesheet" href="css/styles.css?v=1.0">-->
+
+    <script src="jquery-1.12.0.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="swipeSlider" id="0"></div>
+    </div>
+
+<script src="swipeSlider.js"></script>
+<script>
+    var testSlider={
+        0: {
+            images: [
+                {
+                    "desc": "This it the first test description text.",
+                    "src": "./assets/test1.jpg",
+                },
+                {
+                    "desc": "This is the second test decription text.",
+                    "src": "./assets/test2.jpg",
+                },
+                {
+                    "desc": "This is the third test decription text.",
+                    "src": "./assets/test3.jpg",
+                }
+            ]
+        }
+    }
+
+
+
+    $( document ).ready( function() {
+        swipeSlider.setUp( testSlider );
+    });
+
+</script>
+</body>
+</html>
