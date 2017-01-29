@@ -16,7 +16,7 @@ swipeSlider = {
 
 
     this.data = object;
-    this.domDivs = $( '.swipeSlider' );
+    this.domDivs = document.getElementsByClassName('swipeSlider'); //$( '.swipeSlider' );
 
     var sliderCount = 0;
     //var windowWidth = window.innerWidth; //maybe have to check and change on safari and other browsers?
@@ -91,6 +91,7 @@ swipeSlider = {
       var imageDiv = document.createElement( 'div' );
       imageDiv.className = "swipeSlider_image-div";
       imageDiv.id = swipeDiv.id;
+      imageDiv.style.left = '0px';
       imageDiv.style.width = imageDivWidth + "px";
       imageDiv.style[ "padding-left" ] = ( ( 100 - ( 100 * imageWidthPerc ) ) / 2 ) + "%";
       this.data[ key ].imageDiv = imageDiv;
@@ -132,9 +133,11 @@ swipeSlider = {
         this.data[ key ].measureImg = img;
       }
 
-      $( this.data[ key ].measureImg ).load( function() {
-        natH = $( swipeSlider.data[ key ].measureImg ).prop( "naturalHeight" );
-        natW = $( swipeSlider.data[ key ].measureImg ).prop( "naturalWidth" );
+    this.data[ key ].measureImg.addEventListener("load", function(){
+        var badSingleImgEl = document.querySelector('.swipeSlider_image');
+
+        natH = badSingleImgEl.naturalHeight;
+        natW = badSingleImgEl.naturalWidth;
 
         swipeSlider.data[ key ].natH = natH;
         swipeSlider.data[ key ].natW = natW;
@@ -143,9 +146,12 @@ swipeSlider = {
         swipeSlider.data[ key ].imageWidth = imageWidth;
         //swipeDiv.style.height = ( setHeight + 10) + "px";
         //swipeDiv.setAttribute( "height", ( setHeight + 10) + "px" );
-        $( '#' + key + '.swipeSlider' ).css( "height", ( setHeight + 10) + "px" );
-        $( '#' + key + '.swipeSlider' ).css( "padding-bottom", "30px" );
-      });
+
+        //bad to select like this, should have ref to outer div saved to reference here
+        document.querySelector('.swipeSlider').style.height = setHeight + 10 + 'px';
+        //does not need to be set w/ javascript if it is always the same
+        document.querySelector('.swipeSlider').style.paddingBottom = '30px';
+    });
 
       this.setSwipeListeners( swipeDiv );
 
@@ -234,7 +240,8 @@ swipeSlider = {
 
     var xU = this.data[ id ].xUpdate;
 
-    var elLeft = $( this.data[ id ].el ).css("left");
+    //var elLeft = $( this.data[ id ].el ).css("left");
+      var elLeft = document.querySelector('#' + this.data[id].el.id + '.' + this.data[id].el.className)
     var regLeftNum =/\d+/;
     var elLeftNum = Number( regLeftNum.exec(elLeft) );
     var difference = Number( x - xS + xU );
@@ -493,13 +500,96 @@ swipeSlider = {
     }
   },
 
-  cycle: function ( imgDiv, move, key ) {
-    $( imgDiv ).stop().animate( {
-      left: -move + "px"
-    }, 250 );
+  //make it so the move param has the negative or positive,
+    //get rid of negative sign bullshit
+  cycle: function ( element, move, key ) {
+    // $( imgDiv ).stop().animate( {
+    //   left: -move + "px"
+    // }, 250 );
+      //var delta = function(p){return p};
+
+      var delta = makeEaseOut(circ);
+      var duration = 250;
+
+      //function move(element, delta, duration) {
+      var left = +element.style.left.slice(0,-2);
+      var to = left + move;
+
+          this.animate({
+              delay: 1,
+              duration: duration || 250, // 1 sec by default
+              delta: delta,
+              step: function(delta) {
+                  element.style.left = left -to*delta + "px"
+              }
+          })
+
+      //}
+
+      // function bounce(progress) {
+      //     for(var a = 0, b = 1, result; 1; a += b, b /= 2) {
+      //         if (progress >= (7 - 4 * a) / 11) {
+      //             return -Math.pow((11 - 6 * a - 11 * progress) / 4, 2) + Math.pow(b, 2);
+      //         }
+      //     }
+      // }
+      function circ(progress) {
+          return 1 - Math.sin(Math.acos(progress))
+      }
+
+
+      function makeEaseOut(delta) {
+          return function(progress) {
+              return 1 - delta(1 - progress)
+          }
+      }
+
+
+
+
+
+      // var left = -1 * +imgDiv.style.left.slice(0,-2);
+      //
+      // function frame(){
+      //     //left++;
+      //     if(move < left){
+      //         left--;
+      //         imgDiv.style.left = -left + 'px';
+      //     }
+      //     else{
+      //         left++;
+      //         imgDiv.style.left = -left + 'px';
+      //     }
+      //
+      //     if(left == Math.round(move) ) {
+      //         clearInterval(id);
+      //     }
+      // }
+      //
+      // var id = setInterval(frame, .0001);
   },
 
-  resizeSliders: function () {
+    animate: function(opts) {
+        var start = new Date;
+
+        var id = setInterval(function() {
+            var timePassed = new Date - start;
+            var progress = timePassed / opts.duration;
+
+            if (progress > 1) progress = 1;
+
+            var delta = opts.delta(progress);
+            opts.step(delta);
+
+            if (progress == 1) {
+                clearInterval(id)
+            }
+        }, opts.delay || 10)
+
+    },
+
+
+resizeSliders: function () {
 
     for ( var key in this.data ) {
       //get new parent width
@@ -527,9 +617,8 @@ swipeSlider = {
 
       this.data[ key ].halfImageTotal = imageTotalWidth / 2;
 
-
-
-      $( '#' + key + '.swipeSlider' ).css( "height", ( setHeight + 10) + "px" );
+      document.querySelector('#' + key + '.swipeSlider').style.height = setHeight + 10 + "px";
+        //$( '#' + key + '.swipeSlider' ).css( "height", ( setHeight + 10) + "px" );
 
       imageDiv.style.width = imageDivWidth + "px";
       imageDiv.style[ "padding-left" ] = ( ( 100 - ( 100 * imageWidthPerc ) ) / 2 ) + "%";
@@ -554,17 +643,19 @@ swipeSlider = {
     }
   },
 
+    //fade is gone, could work on getting slow opacity change over time w/ javascript
+    //if everything else is good
   checkArrowVis: function( key ) {
     if ( swipeSlider.data[ key ].currentPos === 0 ) {
-      $( swipeSlider.data[ key ].arrowLeft ).fadeOut();
+        swipeSlider.data[ key ].arrowLeft.style.opacity = '0.0';
     } else {
-      $( swipeSlider.data[ key ].arrowLeft ).fadeIn();
+        swipeSlider.data[ key ].arrowLeft.style.opacity = '1.0';
     }
 
     if ( swipeSlider.data[ key ].currentPos === swipeSlider.data[ key ].count - 1 ) {
-      $( swipeSlider.data[ key ].arrowRight ).fadeOut();
+        swipeSlider.data[ key ].arrowRight.style.opacity = '0.0';
     } else {
-      $( swipeSlider.data[ key ].arrowRight ).fadeIn();
+        swipeSlider.data[ key ].arrowRight.style.opacity = '1.0';
     }
   }
 

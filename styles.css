@@ -123,9 +123,11 @@
 .swipeSlider_arrow-div--left {
     padding: 7px 7px 7px 4px;
     left: 1%;
-    display: none; }
+    opacity: 0;
+    /*display: none;*/ }
 
 .container {
   width: 900px;
   margin: 0 auto;
-  background: #333; }
+  /*background: #333; */
+}

@@ -4,24 +4,20 @@
 <head>
     <meta charset="utf-8">
 
-    <title>The HTML5 Herald</title>
-    <!--<link rel="stylesheet" href="css/styles.css?v=1.0">-->
-
-    <script src="jquery-1.12.0.min.js"></script>
-
+    <title>slide-swell</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 
 <body>
 
     <div class="container">
-        <div class="swipeSlider" id="0"></div>
+        <div class="swipeSlider" id="a"></div>
     </div>
 
 <script src="swipeSlider.js"></script>
 <script>
     var testSlider={
-        0: {
+        a: {
             images: [
                 {
                     "desc": "This it the first test description text.",
@@ -41,9 +37,9 @@
 
 
 
-    $( document ).ready( function() {
-        swipeSlider.setUp( testSlider );
-    });
+    //$( document ).ready( function() {
+    document.addEventListener('DOMContentLoaded', swipeSlider.setUp( testSlider ) );
+    //});
 
 </script>
 </body>
