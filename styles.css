@@ -108,8 +108,7 @@
     .swipeSlider_arrow-div--left {
       padding: 7px 7px 7px 4px;
       left: 1%;
-      opacity: 0;
-      /*display: none;*/ }
+      display: none; }
     .slideSwell_arrow-div svg,
     .swipeSlider_arrow-div svg {
       width: 100%;
