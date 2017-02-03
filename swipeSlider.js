@@ -13,6 +13,8 @@
 
 
         setWidth.call(this);
+
+        this.addTouchListeners();
     }
 
     function sanitizeContent(){
@@ -189,6 +191,48 @@
         }
     }
 
+    SlideSwell.prototype.addTouchListeners = function(){
+        if ( typeof window.addEventListener === 'function' ){
+            //(function ( _sD ) {
+                var self = this;
+                this.movingDiv.addEventListener("touchstart", function( event ) {
+                    //swipeSlider.handleStart( event );
+                    self.handleStart(event);
+                });
+            //})( swipeDiv );
+        }
+
+        if ( typeof window.addEventListener === 'function' ){
+            //(function ( _sD ) {
+                var self = this;
+                this.movingDiv.addEventListener("touchmove", function( event ) {
+                    //swipeSlider.handleMove( event );
+                    self.handleMove(event);
+                });
+            //})( swipeDiv );
+        }
+        /*
+         if ( typeof window.addEventListener === 'function' ){
+         (function ( _sD ) {
+         _sD.addEventListener("touchcancel", function() {
+         swipeSlider.handleCancel();
+         });
+         })( swipeDiv );
+         }
+         */
+
+        if ( typeof window.addEventListener === 'function' ){
+            //(function ( _sD ) {
+            var self = this;
+            this.movingDiv.addEventListener("touchend", function() {
+               //     swipeSlider.handleEnd();
+                self.handleEnd();
+            });
+            //})( swipeDiv );
+        }
+
+    },
+
 
     SlideSwell.prototype.arrowPress = function(dir){
         console.log(this);
@@ -267,6 +311,191 @@
             this.arrowRight.style.display = 'block';
         }
     }
+
+    SlideSwell.prototype.handleStart = function( evt ){
+
+        //if ( this.data[ evt.target.id ] ) {
+            this.data.xStart = evt.touches[0].pageX;
+            //this.data[ evt.target.id ].xCurrent = evt.touches[0].pageX;
+        //}
+
+        //will need to check this for scrolling Y TODO
+        //     swipeSlider.yScrolled = false;
+
+    }
+
+    SlideSwell.prototype.handleMove = function( evt ){
+        //will need to check this for scrolling Y TODO
+        //if ( swipeSlider.yScrolled === true ) return;
+
+
+       // if ( !evt.target.id ) {
+       //     this.lastTouchedId = undefined;
+       //     return;
+        //}
+
+        //var id = evt.target.id;
+
+
+        ///changeee
+        /*if ( evt.target.parentElement.parentElement.className == "swipeSlider_image-div") {
+            var el = evt.target.parentElement.parentElement;
+            this.data[ id ].el = el;
+        }
+        if ( this.data[ id ].el === undefined ) return;*/
+
+        var x = evt.touches[0].pageX;
+        var xS = this.data.xStart;
+
+        if( !this.data.xUpdate ) {
+            this.data.xUpdate = 0;
+        }
+
+        var xU = this.data.xUpdate;
+
+        //var elLeft = $( this.data[ id ].el ).css("left");
+        //var elLeft = document.querySelector('#' + this.data[id].el.id + '.' + this.data[id].el.className)
+        //var elLeft = document.querySelector('#' + this.data[id].el.id + '.' + this.data[id].el.className).style.left;
+        var elLeft = this.movingDiv.style.left;
+        var regLeftNum =/\d+/;
+        var elLeftNum = Number( regLeftNum.exec(elLeft) );
+        var difference = Number( x - xS + xU );
+
+        elLeftNum = difference;
+
+        if ( Math.abs( difference - xU ) < 50 ) {
+            return;
+        }
+
+        //TODO
+        //swipeSlider.disableScroll();
+
+
+        //this.data[ id ].xCurrent = difference;
+        //this.data[ id ].el.style.left = Math.floor( elLeftNum ) + "px";
+        this.data.xCurrent = difference;
+        this.movingDiv.style.left = Math.floor( elLeftNum ) + "px";
+
+        //this.lastTouchedId = id;
+
+
+        // if ( evt.path[ 1 ].className == "swipeSlider_image-div") {
+        //
+        // }
+    }
+
+    SlideSwell.prototype.handleEnd = function(){
+
+        //if ( !this.lastTouchedId ) return;
+
+        //var sD = this.data[ this.lastTouchedId ];
+        var sD = this.data;//[ this.lastTouchedId ];
+        var xC = sD.xCurrent;
+        var cP = sD.centeredPositions;
+
+        sD.xUpdate = sD.xCurrent;
+
+        for ( var i = 0; i < cP.length; i++ ) {
+
+            var cV = cP[ i ];
+
+            if ( ( cV === 0 ) && ( -xC < cV ) ) {
+
+                //swipeSlider.cycle( sD.el, cV, this.lastTouchedId  );
+                swipeSlider.cycle( this.movingDiv, cV);
+                //swipeSlider.checkArrowVis( this.lastTouchedId  );
+                sD.xUpdate = cV;
+
+            } else if ( ( i == cP.length - 1 ) && ( -xC > cV ) ) {
+
+                //swipeSlider.cycle( sD.el, cV, this.lastTouchedId  );
+                swipeSlider.cycle( this.movingDiv, cV);
+                //swipeSlider.checkArrowVis( this.lastTouchedId  );
+                sD.xUpdate = -cV;
+
+            } else if ( ( -xC < ( cV + sD.halfImageTotal ) ) && ( -xC > ( cV - sD.halfImageTotal - 1 ) ) ) {
+                //swipeSlider.cycle( sD.el, cV, this.lastTouchedId  );
+                swipeSlider.cycle( this.movingDiv, cV);
+                sD.xUpdate = -cV;
+
+                if ( sD.currentPos != i ) {
+                    sD.pastPosition = sD.currentPos;
+                    sD.currentPos = i;
+                    this.changeHeight( );
+                }
+                this.checkArrowVis( this.lastTouchedId  );
+
+            } else {
+
+            }
+        }
+
+        //TODO
+        //swipeSlider.enableScroll();
+    }
+
+    SlideSwell.prototype.handleCancel = function(evt) {
+        evt.preventDefault();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function preventDefault(e) {
+        e = e || window.event;
+        if (e.preventDefault)
+            e.preventDefault();
+        e.returnValue = false;
+    }
+
+    function disableScroll() {
+        //if (window.addEventListener) // older FF
+        //  window.addEventListener('DOMMouseScroll', preventDefault, false);
+        //window.onwheel = preventDefault; // modern standard
+        //window.onmousewheel = document.onmousewheel = preventDefault; // older browsers, IE
+        window.ontouchmove  = swipeSlider.preventDefault; // mobile
+        //document.onkeydown  = preventDefaultForScrollKeys;
+    }
+
+    function enableScroll() {
+        // if (window.removeEventListener)
+        //window.removeEventListener('DOMMouseScroll', preventDefault, false);
+        //window.onmousewheel = document.onmousewheel = null;
+        //window.onwheel = null;
+        window.ontouchmove = null;
+        //document.onkeydown = null;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     window.swipeSlider = {
