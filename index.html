@@ -1,27 +1,25 @@
 <!doctype html>
-
 <html lang="en">
-<head>
-    <meta charset="utf-8">
+    <head>
+        <meta charset="utf-8">
 
-    <title>slide-swell</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-</head>
+        <title>slide-swell demo</title>
+        <link rel="stylesheet" type="text/css" href="slideSwell.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    </head>
 
-<body>
-
-    <div class="container">
-        <div class="slideSwell" id="testSlideSwell" style="height: 600px;">
-            <img src="./assets/test1.jpg"/>
-            <img src="./assets/test2.jpg"/>
-            <img src="./assets/test3.jpg"/>
+    <body>
+        <div class="container">
+            <div class="slideSwell" id="testSlideSwell">
+                <img src="assets/static/test1.jpg"/>
+                <img src="assets/static/test2.jpg"/>
+                <img src="assets/static/test3.jpg"/>
+            </div>
         </div>
-    </div>
 
-<script src="slideSwell.js"></script>
-<script>
-    new SlideSwell("testSlideSwell");
-</script>
-</body>
+        <script src="slideSwell.js"></script>
+        <script>
+            new SlideSwell("testSlideSwell");
+        </script>
+    </body>
 </html>
