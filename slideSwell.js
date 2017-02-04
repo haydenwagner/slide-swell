@@ -10,6 +10,11 @@
     };
 
     function SlideSwell(id) {
+        //affects the distance you need to drag the image on mobile before it cycles
+        // 1.0 would be exactly half the image width...usually a bit too far, so its
+        // set to default of 1/3 the image width;
+        this.dragThresholdRatio = 0.5;
+
         this.data = {};
         this.wrapperDiv = document.getElementById(id);
 
@@ -300,11 +305,11 @@
             if (currentPos != centerPsLen -1) updatePosition.call(this,currentPos, centerPsLen -1);
         }
         //if swiping towards image before (left) the current image, and past a certain threshold
-        else if(-currentLeftPos < centerPs[currentPos] - sD.halfImageTotal){
+        else if(-currentLeftPos < centerPs[currentPos] - sD.halfImageTotal * this.dragThresholdRatio){
             goTo = centerPs[currentPos - 1];
             updatePosition.call(this,currentPos, currentPos -1);
         //if swiping towards image after (right) the current image, and past a certain threshold
-        }else if(-currentLeftPos > centerPs[currentPos] + sD.halfImageTotal){
+        }else if(-currentLeftPos > centerPs[currentPos] + sD.halfImageTotal * this.dragThresholdRatio){
             goTo = centerPs[currentPos + 1];
             updatePosition.call(this,currentPos, currentPos +1);
         //return to current position
