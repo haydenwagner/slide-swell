@@ -484,9 +484,125 @@
 
 
 
+    //animations from here:
+    // http://javascript.info/tutorial/animation
+
+    //make it so the move param has the negative or positive,
+    //get rid of negative sign bullshit
+    function cycle( element, move) {
+        //var delta = function(p){return p};
+
+        var delta = makeEaseOut(circ);
+        var duration = 250;
+
+        //function move(element, delta, duration) {
+        var left = +element.style.left.slice(0,-2);
+        var to = left + move;
+
+        animate({
+            delay: 1,
+            duration: duration || 250, // 1 sec by default
+            delta: delta,
+            step: function(delta) {
+                element.style.left = left -to*delta + "px"
+            }
+        });
 
 
+        // function bounce(progress) {
+        //     for(var a = 0, b = 1, result; 1; a += b, b /= 2) {
+        //         if (progress >= (7 - 4 * a) / 11) {
+        //             return -Math.pow((11 - 6 * a - 11 * progress) / 4, 2) + Math.pow(b, 2);
+        //         }
+        //     }
+        // }
+        function circ(progress) {
+            return 1 - Math.sin(Math.acos(progress))
+        }
 
+
+        function makeEaseOut(delta) {
+            return function(progress) {
+                return 1 - delta(1 - progress)
+            }
+        }
+
+    }
+
+    function animate(opts) {
+        var start = new Date;
+
+        var id = setInterval(function() {
+            var timePassed = new Date - start;
+            var progress = timePassed / opts.duration;
+
+            if (progress > 1) progress = 1;
+
+            var delta = opts.delta(progress);
+            opts.step(delta);
+
+            if (progress == 1) {
+                clearInterval(id)
+            }
+        }, opts.delay || 10)
+    }
+
+/*
+    function resizeSliders() {
+
+        for ( var key in this.data ) {
+            //get new parent width
+            if( key === "x" ) continue;
+
+
+            var imageWidthPerc = 0.90;
+            var swipeDiv = this.data[ key ].swipeDiv;
+
+            if ( !swipeDiv ) return;
+
+            var imageDiv = this.data[ key ].imageDiv;
+            var count = this.data[key].count;
+
+            var parentWidth = swipeDiv.parentElement.clientWidth;
+            var imageWidth = parentWidth * imageWidthPerc;
+            var imagePadding = parentWidth * 0.025;
+            var imageTotalWidth = imageWidth + imagePadding;
+            var imageDivWidth = ( count * imageWidth ) + ( ( count ) * imagePadding );
+
+            var natH = swipeSlider.data[ key ].natH;
+            var natW = swipeSlider.data[ key ].natW;
+            var setHeight = ( imageWidth * natH ) / natW;
+            var correctLeftPos;
+
+            this.data[ key ].halfImageTotal = imageTotalWidth / 2;
+
+            document.querySelector('#' + key + '.swipeSlider').style.height = setHeight + 10 + "px";
+            //$( '#' + key + '.swipeSlider' ).css( "height", ( setHeight + 10) + "px" );
+
+            imageDiv.style.width = imageDivWidth + "px";
+            imageDiv.style[ "padding-left" ] = ( ( 100 - ( 100 * imageWidthPerc ) ) / 2 ) + "%";
+            this.data[ key ].centeredPositions = [];
+
+            for ( var a = 0; a < this.data[ key ].count; a++ ) {
+                this.data[ key ].centeredPositions.push( a * imageTotalWidth );
+
+                var captionDiv = this.data[ key ].captionDivs[a];
+                var img = this.data[ key ].images[a].element;
+
+                captionDiv.style.width = ( imageWidth + imagePadding ) + "px";
+
+                img.style.width = imageWidth + "px";
+                img.style[ "margin-right" ] = imagePadding + "px";
+            }
+
+            correctLeftPos = this.data[ key ].centeredPositions[ this.data[ key ].currentPos ];
+            swipeSlider.cycle( imageDiv, correctLeftPos, key );
+            this.data[ key ].xUpdate = -correctLeftPos;
+
+        }
+    }
+
+*/
 
 
 
