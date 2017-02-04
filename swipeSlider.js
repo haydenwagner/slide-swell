@@ -187,9 +187,10 @@ SlideSwell.prototype.arrowPress = function (dir) {
             this.checkArrowVis();
 
             this.changeHeight();
-        } else {
-            pos--;
         }
+        // else {
+        //     pos--;
+        // }
     }
 
     if (dir === "left") {
@@ -210,9 +211,10 @@ SlideSwell.prototype.arrowPress = function (dir) {
             this.checkArrowVis();
 
             this.changeHeight();
-        } else {
-            pos++;
         }
+        // else {
+        //     pos++;
+        // }
     }
 }
 
@@ -260,40 +262,43 @@ SlideSwell.prototype.handleMove = function(evt){
 
 SlideSwell.prototype.handleEnd = function () {
     var sD = this.data;
-    var xC = sD.xCurrent;
-    var cP = sD.centeredPositions;
+    var currentPos = sD.currentPos;
+    var currentLeftPos = sD.xCurrent;
+    var centerPs = sD.centeredPositions;
+    var centerPsLen = centerPs.length;
 
-    sD.xUpdate = sD.xCurrent;
+    var goTo;
+    //if swiping before first image
+    if(-currentLeftPos < 0){
+        goTo = centerPs[0];
+        if (currentPos != 0) updatePosition.call(this,currentPos, 0);
+    }
+    //if swiping after left image
+    else if(-currentLeftPos > centerPs[centerPsLen -1]){
+        goTo = centerPs[centerPsLen -1];
+        if (currentPos != centerPsLen -1) updatePosition.call(this,currentPos, centerPsLen -1);
+    }
+    //if swiping towards image before (left) the current image, and past a certain threshold
+    else if(-currentLeftPos < centerPs[currentPos] - sD.halfImageTotal){
+        goTo = centerPs[currentPos - 1];
+        updatePosition.call(this,currentPos, currentPos -1);
+    //if swiping towards image after (right) the current image, and past a certain threshold
+    }else if(-currentLeftPos > centerPs[currentPos] + sD.halfImageTotal){
+        goTo = centerPs[currentPos + 1];
+        updatePosition.call(this,currentPos, currentPos +1);
+    //return to current position
+    }else{
+        goTo = centerPs[currentPos];
+    }
 
-    for (var i = 0; i < cP.length; i++) {
+    this.cycle(this.movingDiv, goTo);
+    sD.xUpdate = -goTo;
 
-        var cV = cP[i];
-
-        if (( cV === 0 ) && ( -xC < cV )) {
-
-            this.cycle(this.movingDiv, cV);
-            sD.xUpdate = cV;
-
-        } else if (( i == cP.length - 1 ) && ( -xC > cV )) {
-
-            this.cycle(this.movingDiv, cV);
-            sD.xUpdate = -cV;
-
-        } else if (( -xC < ( cV + sD.halfImageTotal ) ) && ( -xC > ( cV - sD.halfImageTotal - 1 ) )) {
-
-            this.cycle(this.movingDiv, cV);
-            sD.xUpdate = -cV;
-
-            if (sD.currentPos != i) {
-                sD.pastPosition = sD.currentPos;
-                sD.currentPos = i;
-                this.changeHeight();
-            }
-            this.checkArrowVis();
-
-        } else {
-
-        }
+    function updatePosition(old, newy){
+        sD.pastPosition = old;
+        sD.currentPos = newy;
+        this.changeHeight();
+        this.checkArrowVis();
     }
 
     this.enableScroll();
@@ -307,6 +312,8 @@ SlideSwell.prototype.handleCancel = function (evt) {
 
 //animations from here:
 // http://javascript.info/tutorial/animation
+
+//this should really control the pos prop
 
 //make it so the move param has the negative or positive,
 //get rid of negative sign bullshit
