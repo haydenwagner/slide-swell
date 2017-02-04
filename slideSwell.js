@@ -136,7 +136,14 @@
                 self.data.measureImg = self.images[i].el;
             });
 
-            this.data.measureImg.addEventListener("load", function () {
+            if(self.data.measureImg.complete){
+                setHeight.call(self.data.measureImg);
+            }
+            else{
+                this.data.measureImg.addEventListener("load", setHeight);
+            }
+
+            function setHeight(){
                 var natH = this.naturalHeight;
                 var natW = this.naturalWidth;
                 var setHeight = ( imageWidth * natH ) / natW;
@@ -144,11 +151,8 @@
                 self.data.natH = natH;
                 self.data.natW = natW;
                 self.data.imageWidth = imageWidth;
-
-                self.wrapperDiv.style.height = setHeight + 10 + 'px';
-                //does not need to be set w/ javascript if it is always the same
-                self.wrapperDiv.style.paddingBottom = '30px';
-            });
+                self.wrapperDiv.style.height = setHeight + 'px';
+            };
 
             this.changeHeight(true);
         }).call(this);
@@ -190,59 +194,33 @@
     }
 
 
-    SlideSwell.prototype.arrowPress = function (dir) {
+    SlideSwell.prototype.arrowPress = function (dir){
         var sD = this.data,
             pos = sD.currentPos;
 
         //could clean this up a lot
         if (dir === "right") {
             pos++;
-            if (sD.centeredPositions[pos] !== undefined) {
-                this.cycle(this.movingDiv, sD.centeredPositions[pos]);
-
-                if (sD.centeredPositions[pos] === 0) {
-                    sD.xCurrent = sD.centeredPositions[pos];
-                    sD.xUpdate = sD.centeredPositions[pos];
-                } else {
-                    sD.xCurrent = -sD.centeredPositions[pos];
-                    sD.xUpdate = -sD.centeredPositions[pos];
-                }
-
-                sD.pastPosition = sD.currentPos;
-                sD.currentPos = pos;
-                this.checkArrowVis();
-
-                this.changeHeight();
-            }
-            // else {
-            //     pos--;
-            // }
         }
-
-        if (dir === "left") {
+        else if(dir === "left") {
             pos--;
-            if (sD.centeredPositions[pos] !== undefined) {
-                this.cycle(this.movingDiv, sD.centeredPositions[pos]);
-
-                if (sD.centeredPositions[pos] === 0) {
-                    sD.xCurrent = sD.centeredPositions[pos];
-                    sD.xUpdate = sD.centeredPositions[pos];
-                } else {
-                    sD.xCurrent = -sD.centeredPositions[pos];
-                    sD.xUpdate = -sD.centeredPositions[pos];
-                }
-
-                sD.pastPosition = sD.currentPos;
-                sD.currentPos = pos;
-                this.checkArrowVis();
-
-                this.changeHeight();
-            }
-            // else {
-            //     pos++;
-            // }
         }
-    }
+
+        if (sD.centeredPositions[pos] === 0) {
+            sD.xCurrent = sD.centeredPositions[pos];
+            sD.xUpdate = sD.centeredPositions[pos];
+        } else {
+            sD.xCurrent = -sD.centeredPositions[pos];
+            sD.xUpdate = -sD.centeredPositions[pos];
+        }
+
+        sD.pastPosition = sD.currentPos;
+        sD.currentPos = pos;
+
+        this.changeHeight();
+        this.cycle(this.movingDiv, sD.centeredPositions[pos]);
+        this.checkArrowVis();
+    };
 
     SlideSwell.prototype.checkArrowVis = function () {
         if (this.data.currentPos === 0) {
@@ -261,6 +239,8 @@
 
     SlideSwell.prototype.handleStart = function(evt){
         this.data.xStart = evt.touches[0].pageX;
+        this.data.xCurrent = this.data.xUpdate;
+        this.data.moved = false;
     }
 
 
@@ -275,18 +255,25 @@
         var xU = this.data.xUpdate;
         var difference = Number(x - xS + xU);
 
-        if (Math.abs(difference - xU) < 50) {
-            return;
+        if(!this.data.moved) {
+            if (Math.abs(difference - xU) < 35) {
+                return;
+            }
+            else if (Math.abs(difference - xU) > 35){
+                this.data.moved = true;
+            }
         }
 
         this.disableScroll();
 
         this.data.xCurrent = difference;
         this.movingDiv.style.left = Math.floor(difference) + "px";
-
+        this.data.noMove = false;
     }
 
     SlideSwell.prototype.handleEnd = function () {
+        if(this.data.moved === false) return;
+
         var sD = this.data;
         var currentPos = sD.currentPos;
         var currentLeftPos = sD.xCurrent;
@@ -345,8 +332,8 @@
     //get rid of negative sign bullshit
     SlideSwell.prototype.cycle = function(element, move) {
         //no ease out w/ normal delta
-        //var delta = function(p){return p};
-        var delta = makeEaseOut(circ);
+        var delta = function(p){return p};
+        //var delta = makeEaseOut(circ);
         var duration = 250;
         var left = +element.style.left.slice(0, -2);
         var to = left + move;

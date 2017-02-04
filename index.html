@@ -12,7 +12,6 @@
 <body>
 
     <div class="container">
-
         <div class="slideSwell" id="testSlideSwell" style="height: 600px;">
             <img src="./assets/test1.jpg"/>
             <img src="./assets/test2.jpg"/>
@@ -22,33 +21,7 @@
 
 <script src="slideSwell.js"></script>
 <script>
-    var testSlider={
-        a: {
-            images: [
-                {
-                    "desc": "This it the first test description text.",
-                    "src": "./assets/test1.jpg",
-                },
-                {
-                    "desc": "This is the second test decription text.",
-                    "src": "./assets/test2.jpg",
-                },
-                {
-                    "desc": "This is the third test decription text.",
-                    "src": "./assets/test3.jpg",
-                }
-            ]
-        }
-    }
-
-
-
-    //$( document ).ready( function() {
-    //document.addEventListener('DOMContentLoaded', swipeSlider.setUp( testSlider ) );
-    //});
-
     new SlideSwell("testSlideSwell");
-
 </script>
 </body>
 </html>
