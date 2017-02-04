@@ -368,6 +368,7 @@
         }
 
         //TODO
+        disableScroll();
         //swipeSlider.disableScroll();
 
 
@@ -431,6 +432,7 @@
         }
 
         //TODO
+        enableScroll();
         //swipeSlider.enableScroll();
     }
 
@@ -463,22 +465,24 @@
     }
 
     function disableScroll() {
-        //if (window.addEventListener) // older FF
-        //  window.addEventListener('DOMMouseScroll', preventDefault, false);
-        //window.onwheel = preventDefault; // modern standard
-        //window.onmousewheel = document.onmousewheel = preventDefault; // older browsers, IE
-        window.ontouchmove  = swipeSlider.preventDefault; // mobile
-        //document.onkeydown  = preventDefaultForScrollKeys;
+        document.addEventListener('touchstart',preventTouchStart, false);
+        document.addEventListener('touchmove',preventTouchMove, false);
     }
 
     function enableScroll() {
-        // if (window.removeEventListener)
-        //window.removeEventListener('DOMMouseScroll', preventDefault, false);
-        //window.onmousewheel = document.onmousewheel = null;
-        //window.onwheel = null;
-        window.ontouchmove = null;
-        //document.onkeydown = null;
+        document.removeEventListener('touchstart',preventTouchStart,false);
+        document.removeEventListener('touchmove',preventTouchMove,false);
     }
+
+    function preventTouchStart(e){
+        e.preventDefault();
+    }
+
+    function preventTouchMove(e){
+        e.preventDefault();
+    }
+
+
 
 
 
