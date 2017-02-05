@@ -9,7 +9,8 @@ The goal of this project is to create an aesthetic slider for desktop and mobile
 **You should use slide-swell if:**
  - You want to avoid using jQuery in your project
  - You need a small JS slider (*minified JS/CSS files are only 10.2kb total in the current release*)
- - You want your really small slider to look really good 
+ - You want your slider to animate images and 'swell' their size
+   - (**demo**: http://bl.ocks.org/haydenwagner/c23f63ad4c94622b14fdab9a62075d0b)
  - You want a slider that supports click and touch events
 
 **You probably don't need slide-swell if:**
