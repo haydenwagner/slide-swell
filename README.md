@@ -6,7 +6,16 @@ The goal of this project is to create an aesthetic slider for desktop and mobile
 
 ![slide-swell example](assets/static/slide-swell.jpg) 
 
+**You should use slide-swell if:**
+ - You want to avoid using jQuery in your project
+ - You need a small JS slider (*minified JS/CSS files are only 10.2kb total in the current release*)
+ - You want your really small slider to look really good 
+ - You want a slider that supports click and touch events
 
+**You probably don't need slide-swell if:**
+ - You are using jQuery in your project. *If so, there are better, smaller, and more customizable slider options already available* (ex. http://unslider.com/, http://supersimpleslider.com/, http://kenwheeler.github.io/slick/)
+ 
+ 
 
 ### Demo instructions
 Download/clone this repo and open the index.html file to see a slide-swell slider in action
