@@ -54,7 +54,7 @@ Add the minified js/css files (check the release) to your html file, and then fo
 
 3. Add your slider images as normal <img> tags inside that div
 
-4. In a script tag (below the slide-swell JavaScript file) make a new slide-swell object by calling 'new SlideSwell([divID]) (divID would be whatever ID you gave your div in step 2). 
+4. In a script tag (below the slide-swell JavaScript file) make a new slide-swell object by calling 'new SlideSwell([divID])' (divID would be whatever ID you gave your div in step 2). 
 
 
 
