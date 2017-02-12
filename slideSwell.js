@@ -9,7 +9,7 @@
         return check;
     };
 
-    function SlideSwell(id) {
+    function Slideswell(id) {
         //affects the distance you need to drag the image on mobile before it cycles
         // 1.0 would be exactly half the image width...usually a bit too far
         this.dragThresholdRatio = 0.5;
@@ -23,7 +23,7 @@
 
             images.map(function (i) {
                 if (i.nodeName.toLowerCase() === 'img') {
-                    i.setAttribute("class", "slideSwell_image");
+                    i.setAttribute("class", "slideswell_image");
                     self.images.push({el: i});
                     //movingDiv.appendChild(i);
                 }
@@ -41,12 +41,12 @@
 
             var arrowEventType = mobileCheck() ? "touchstart" : "click";
 
-            movingDiv.setAttribute("class", "slideSwell_image-div");
+            movingDiv.setAttribute("class", "slideswell_image-div");
 
 
             this.images.map(function (n) {
                 if (n.el.nodeName.toLowerCase() === 'img') {
-                    n.el.setAttribute("class", "slideSwell_image");
+                    n.el.setAttribute("class", "slideswell_image");
                     movingDiv.appendChild(n.el);
                 }
             });
@@ -54,7 +54,7 @@
             this.wrapperDiv.appendChild(movingDiv);
             this.movingDiv = movingDiv;
 
-            arrowLeft.setAttribute('class', 'slideSwell_arrow-div slideSwell_arrow-div--left');
+            arrowLeft.setAttribute('class', 'slideswell_arrow-div slideswell_arrow-div--left');
             arrowLeft.innerHTML = '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="22.135px" height="34.01px" viewBox="1.575 1.432 22.135 34.01" enable-background="new 1.575 1.432 22.135 34.01" xml:space="preserve"><g><path fill="#FFFFFF" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M20.285,2.898c1.542-1.242,2.803-0.64,2.803,1.341v28.608c0,1.979-1.261,2.583-2.803,1.341L3.677,20.802c-1.541-1.242-1.541-3.275,0-4.519L20.285,2.898z"/></g></svg>';
 
             this.wrapperDiv.appendChild(arrowLeft);
@@ -64,7 +64,7 @@
                 self.arrowPress("left");
             });
 
-            arrowRight.setAttribute('class', 'slideSwell_arrow-div slideSwell_arrow-div--right');
+            arrowRight.setAttribute('class', 'slideswell_arrow-div slideswell_arrow-div--right');
             arrowRight.innerHTML = '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="22.135px" height="34.01px" viewBox="1.575 1.432 22.135 34.01" enable-background="new 1.575 1.432 22.135 34.01" xml:space="preserve"><g><path fill="#FFFFFF" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M21.931,16.283c1.541,1.243,1.541,3.276,0,4.519L5.324,34.188c-1.542,1.242-2.803,0.639-2.803-1.341V4.239c0-1.98,1.261-2.583,2.803-1.341L21.931,16.283z"/></g></svg>';
 
             this.wrapperDiv.appendChild(arrowRight);
@@ -145,17 +145,17 @@
     }
 
 
-    SlideSwell.prototype.changeHeight = function (start) {
+    Slideswell.prototype.changeHeight = function (start) {
         if (start != undefined) {
-            this.images[this.data.currentPos].el.className = "slideSwell_image--selected";
+            this.images[this.data.currentPos].el.className = "slideswell_image--selected";
         } else {
-            this.images[this.data.currentPos].el.className = "slideSwell_image--selected";
-            this.images[this.data.pastPosition].el.className = "slideSwell_image";
+            this.images[this.data.currentPos].el.className = "slideswell_image--selected";
+            this.images[this.data.pastPosition].el.className = "slideswell_image";
         }
     };
 
 
-    SlideSwell.prototype.arrowPress = function (dir){
+    Slideswell.prototype.arrowPress = function (dir){
         var sD = this.data,
             pos = sD.currentPos;
 
@@ -182,7 +182,7 @@
         this.checkArrowVis();
     };
 
-    SlideSwell.prototype.checkArrowVis = function () {
+    Slideswell.prototype.checkArrowVis = function () {
         if (this.data.currentPos === 0) {
             this.arrowLeft.style.display = 'none';
         } else {
@@ -197,14 +197,14 @@
     };
 
 
-    SlideSwell.prototype.handleStart = function(evt){
+    Slideswell.prototype.handleStart = function(evt){
         this.data.xStart = evt.touches[0].pageX;
         this.data.xCurrent = this.data.xUpdate;
         this.data.moved = false;
     };
 
 
-    SlideSwell.prototype.handleMove = function(evt){
+    Slideswell.prototype.handleMove = function(evt){
         var x = evt.touches[0].pageX;
         var xS = this.data.xStart;
 
@@ -231,7 +231,7 @@
         this.data.noMove = false;
     };
 
-    SlideSwell.prototype.handleEnd = function () {
+    Slideswell.prototype.handleEnd = function () {
         if(this.data.moved === false) return;
 
         var sD = this.data;
@@ -277,13 +277,13 @@
         this.enableScroll();
     };
 
-    SlideSwell.prototype.handleCancel = function (evt) {
+    Slideswell.prototype.handleCancel = function (evt) {
         evt.preventDefault();
     };
 
     //animations from here:
     // http://javascript.info/tutorial/animation
-    SlideSwell.prototype.cycle = function(element, move) {
+    Slideswell.prototype.cycle = function(element, move) {
         //no ease out w/ normal delta
         var delta = function(p){return p};
         //var delta = makeEaseOut(circ);
@@ -330,26 +330,26 @@
     };
 
 
-    SlideSwell.prototype.disableScroll = function() {
+    Slideswell.prototype.disableScroll = function() {
         var self = this;
         document.addEventListener('touchstart', self.preventTouchStart, false);
         document.addEventListener('touchmove', self.preventTouchMove, false);
     };
 
-    SlideSwell.prototype.enableScroll = function() {
+    Slideswell.prototype.enableScroll = function() {
         var self = this;
         document.removeEventListener('touchstart', self.preventTouchStart, false);
         document.removeEventListener('touchmove', self.preventTouchMove, false);
     };
 
-    SlideSwell.prototype.preventTouchStart = function(e) {
+    Slideswell.prototype.preventTouchStart = function(e) {
         e.preventDefault();
     };
 
-    SlideSwell.prototype.preventTouchMove = function(e) {
+    Slideswell.prototype.preventTouchMove = function(e) {
         e.preventDefault();
     };
 
     //add to window so user can instantiate new SlideSwells
-    window.SlideSwell = SlideSwell;
+    window.Slideswell = Slideswell;
 }());
