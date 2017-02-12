@@ -6,7 +6,7 @@ The goal of this project is to create an aesthetic slider for desktop and mobile
 
 [**Live Gist Demo**](http://bl.ocks.org/haydenwagner/c23f63ad4c94622b14fdab9a62075d0b)
 
-![slideswell example](assets/static/slide-swell.jpg) 
+![slideswell example](assets/static/slideswell.jpg)
 
 **You should use slideswell if:**
  - You want to avoid using jQuery in your project
