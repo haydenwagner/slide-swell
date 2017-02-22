@@ -27,23 +27,25 @@ Download/clone this repo and open the index.html file to see a slideswell slider
 Add the minified js/css files (check the release) to your html file, and then follow the basic structure below to make a new slider.
 (container div is included for positioning/size, not necessary to create a slider)
 
-    <link rel="stylesheet" type="text/css" href="slideswell.min.css">
-    
-    <body>
-        <div class="container">
-            <div class="slideswell" id="testSlideswell">
-                <img src="../assets/static/test1.jpg"/>
-                <img src="../assets/static/test2.jpg"/>
-                <img src="../assets/static/test3.jpg"/>
-            </div>
-        </div>
-    </body>
+```html
+<link rel="stylesheet" type="text/css" href="slideswell.min.css">
 
-    <script src="slideswell.min.js"></script>
-    
-    <script>
-        new Slideswell("testSlideswell");
-    </script>
+<body>
+    <div class="container">
+        <div class="slideswell" id="testSlideswell">
+            <img src="../assets/static/test1.jpg"/>
+            <img src="../assets/static/test2.jpg"/>
+            <img src="../assets/static/test3.jpg"/>
+        </div>
+    </div>
+</body>
+
+<script src="slideswell.min.js"></script>
+
+<script>
+    new Slideswell("testSlideswell");
+</script>
+```
 
 
 ### Detailed installation instructions:
