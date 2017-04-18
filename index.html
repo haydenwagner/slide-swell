@@ -4,26 +4,27 @@
         <meta charset="utf-8">
 
         <title>slide-swell demo</title>
-        <link rel="stylesheet" type="text/css" href="slideswell.css">
+        <!--<link rel="stylesheet" type="text/css" href="slideswell.css"> -->
+        <link rel="stylesheet" type="text/css" href="assets/styles.css">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     </head>
 
     <body>
         <div class="container">
-            <div class="slideswell" id="testSlideswell">
+            <div class="slideswell2" style="height: 300px;" id="testSlideswell">
                 <img src="assets/static/test1.jpg"/>
                 <img src="assets/static/test2.jpg"/>
                 <img src="assets/static/test3.jpg"/>
             </div>
         </div>
 
-        <div class="container">
-            <div class="slideswell" style="height: 300px;" id="testFlexwell">
-                <img src="assets/static/test1.jpg"/>
-                <img src="assets/static/test2.jpg"/>
-                <img src="assets/static/test3.jpg"/>
-            </div>
-        </div>
+        <!--<div class="container">-->
+            <!--<div class="slideswell" style="height: 300px;" id="testFlexwell">-->
+                <!--<img src="assets/static/test1.jpg"/>-->
+                <!--<img src="assets/static/test2.jpg"/>-->
+                <!--<img src="assets/static/test3.jpg"/>-->
+            <!--</div>-->
+        <!--</div>-->
 
 
         <script src="slideswell.js"></script>
@@ -35,6 +36,12 @@
             var test = Object.create(SlideSwell);
             test.init('testSlideswell');
             console.log(test);
+
+            test.slides.forEach(function(x){
+                console.log( x.getCenterOffset() );
+            });
+
+            //test.advancePosition();
         </script>
     </body>
 </html>
