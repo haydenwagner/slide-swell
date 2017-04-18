@@ -28,9 +28,13 @@
 
         <script src="slideswell.js"></script>
         <script src="flexwell.js"></script>
+        <script src="sw.js"></script>
         <script>
-            new Slideswell("testSlideswell");
-            new Flexwell("testFlexwell");
+//            new Slideswell("testSlideswell");
+//            new Flexwell("testFlexwell");
+            var test = Object.create(SlideSwell);
+            test.init('testSlideswell');
+            console.log(test);
         </script>
     </body>
 </html>
