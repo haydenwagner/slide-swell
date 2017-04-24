@@ -8,15 +8,20 @@ var SlideSwell = {
             this.slides.push(Object.create(Slide).init(x));
         }, this);
         this.wrapperDiv = Object.create(WrapperDiv).init(this);
+        this.arrowLeft = Object.create(Arrow).init(this, 'left');
+        this.domElement.appendChild(this.arrowLeft.domElement);
+        this.arrowRight= Object.create(Arrow).init(this, 'right');
+        this.domElement.appendChild(this.arrowRight.domElement);
+
         this.currentPosition = 0;
 
         this.setStartPosition();
 
         //tests
-        this.advancePosition();
-        this.advancePosition();
-        this.returnPosition();
-        this.returnPosition();
+        //this.advancePosition();
+        //this.advancePosition();
+        //this.returnPosition();
+        //this.returnPosition();
     },
 
     setStartPosition: function(){
@@ -45,32 +50,42 @@ var SlideSwell = {
     advancePosition: function(){
         if( (this.currentPosition + 1) <= this.slides.length - 1 ){
             this.setPosition(this.currentPosition + 1);
+            if(this.currentPosition === 1){
+                this.arrowLeft.domElement.style.display = 'block';
+            }else if(this.currentPosition === this.slides.length - 1){
+                this.arrowRight.domElement.style.display = 'none';
+            }
         }
     },
 
     returnPosition: function(){
         if( (this.currentPosition - 1) >= 0 ){
             this.setPosition(this.currentPosition - 1);
+            if(this.currentPosition === this.slides.length - 2){
+                this.arrowRight.domElement.style.display = 'block';
+            }else if(this.currentPosition === 0){
+                this.arrowLeft.domElement.style.display = 'none';
+            }
         }
     }
 };
 
 var WrapperDiv = {
     init: function(parent){
-        var wrapperDiv = document.createElement('div');
-        this.domElement = wrapperDiv;
+        this.domElement = document.createElement('div');
         this.domElement.className = 'slideswell2_image-div';
-        this.wrapImages(wrapperDiv, parent);
+        this.parent = parent;
+        this.wrapImages();
         return this;
     },
 
-    wrapImages: function(wrapperDiv, parent){
-        parent.slides.map(function(x){
-            wrapperDiv.append(x.domElement);
-        });
-        parent.domElement.append(wrapperDiv);
+    wrapImages: function(){
+        this.parent.slides.map(function(x){
+            this.domElement.appendChild(x.domElement);
+        },this);
+        this.parent.domElement.append(this.domElement);
     },
-    
+
     changeOffset: function(newOffset){
         this.domElement.style.left = -newOffset + 'px';
     }
@@ -87,3 +102,57 @@ var Slide = {
         return this.domElement.offsetLeft + this.domElement.width/2;
     }
 };
+
+var Arrow = {
+    init: function(parent, type){
+        this.domElement = document.createElement('div');
+        this.parent = parent;
+        this.type = this.setType(type);
+        if(this.type != undefined){
+            var elClass = "slideswell2_arrow-div slideswell2_arrow-div--";
+            elClass += this.type ? 'right' : 'left';
+            this.domElement.setAttribute('class', elClass);
+            this.svg = this.domElement.innerHTML = this.buildSVG();
+            this.addListener();
+        }
+        return this;
+    },
+
+    setType: function(type){
+        if(type === undefined) {
+            throw new Error("Define an arrow direction type (String, 'left' or 'right')");
+        }else if(type === 'right'){
+            return 1;
+        }else if(type === 'left'){
+            return 0;
+        }else if(typeof type != String){
+            throw new Error("Define an arrow direction type as a String ('left' or 'right')");
+        }else{
+            throw new Error("Arrow function expecting different parameters. Pass 'left' or 'right'");
+        }
+    },
+
+    buildSVG: function(){
+        if(this.type){
+            return '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="22.135px" height="34.01px" viewBox="1.575 1.432 22.135 34.01" enable-background="new 1.575 1.432 22.135 34.01" xml:space="preserve"><g><path fill="#FFFFFF" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M21.931,16.283c1.541,1.243,1.541,3.276,0,4.519L5.324,34.188c-1.542,1.242-2.803,0.639-2.803-1.341V4.239c0-1.98,1.261-2.583,2.803-1.341L21.931,16.283z"/></g></svg>';
+        }else{
+            return '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="22.135px" height="34.01px" viewBox="1.575 1.432 22.135 34.01" enable-background="new 1.575 1.432 22.135 34.01" xml:space="preserve"><g><path fill="#FFFFFF" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M20.285,2.898c1.542-1.242,2.803-0.64,2.803,1.341v28.608c0,1.979-1.261,2.583-2.803,1.341L3.677,20.802c-1.541-1.242-1.541-3.275,0-4.519L20.285,2.898z"/></g></svg>';
+        }
+    },
+
+    addListener: function(){
+        var _this = this;
+        if(this.type){
+            this.domElement.addEventListener('click', function(){
+                _this.parent.advancePosition();
+                console.log('right-click');
+            })
+        }
+        else{
+            this.domElement.addEventListener('click', function(){
+                _this.parent.returnPosition();
+                console.log('left-click');
+            })
+        }
+    }
+}
