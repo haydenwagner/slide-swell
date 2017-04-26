@@ -43,8 +43,15 @@ var SlideSwell = {
             sliderWidth = this.domElement.clientWidth,
             newOffset = slideOffset - sliderWidth/2;
 
-        this.wrapperDiv.changeOffset(newOffset);
+        //this.wrapperDiv.changeOffset(newOffset);
+        this.animate(this.wrapperDiv.domElement, newOffset);
+
+        //TODO make this less absolute
+        this.slides[this.currentPosition].domElement.className = 'slideswell2_image';
         this.currentPosition = position;
+
+        //the newly selected slide TODO clean this up
+        this.slides[position].domElement.className += "--selected";
     },
 
     advancePosition: function(){
@@ -66,6 +73,56 @@ var SlideSwell = {
             }else if(this.currentPosition === 0){
                 this.arrowLeft.domElement.style.display = 'none';
             }
+        }
+    },
+
+
+    // http://javascript.info/tutorial/animation
+    animate: function(element, move) {
+        //no ease out w/ normal delta
+        //var delta = function (p) {
+        //    return p;
+        //};
+        var delta = makeEaseOut(circ);
+        var duration = 200;
+        var left = +element.style.left.slice(0, -2);
+        var to = left + move;
+
+        animate({
+            delay: 1,
+            duration: duration || 250, // 1 sec by default
+            delta: delta,
+            step: function (delta) {
+                element.style.left = left - to * delta + "px";
+            }
+        });
+
+        function circ(progress) {
+            return 1 - Math.sin(Math.acos(progress));
+        }
+
+        function makeEaseOut(delta) {
+            return function (progress) {
+                return 1 - delta(1 - progress);
+            }
+        }
+
+        function animate(opts) {
+            var start = new Date;
+
+            var id = setInterval(function () {
+                var timePassed = new Date - start;
+                var progress = timePassed / opts.duration;
+
+                if (progress > 1) progress = 1;
+
+                var delta = opts.delta(progress);
+                opts.step(delta);
+
+                if (progress == 1) {
+                    clearInterval(id)
+                }
+            }, opts.delay || 10);
         }
     }
 };
