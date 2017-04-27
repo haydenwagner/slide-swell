@@ -39,12 +39,9 @@ var SlideSwell = {
     },
 
     setPosition:function(position){
-        var slideOffset = this.slides[position].getCenterOffset(),
-            sliderWidth = this.domElement.clientWidth,
-            newOffset = slideOffset - sliderWidth/2;
-
-        //this.wrapperDiv.changeOffset(newOffset);
-        this.animate(this.wrapperDiv.domElement, newOffset);
+        var slideOffset,
+            sliderWidth,
+            newOffset;
 
         //TODO make this less absolute
         this.slides[this.currentPosition].domElement.className = 'slideswell2_image';
@@ -52,6 +49,13 @@ var SlideSwell = {
 
         //the newly selected slide TODO clean this up
         this.slides[position].domElement.className += "--selected";
+
+        slideOffset = this.slides[position].getCenterOffset();
+        sliderWidth = this.domElement.clientWidth;
+        newOffset = slideOffset - sliderWidth/2;
+
+        //this.wrapperDiv.changeOffset(newOffset);
+        this.animate(this.wrapperDiv.domElement, newOffset);
     },
 
     advancePosition: function(){
@@ -137,9 +141,18 @@ var WrapperDiv = {
     },
 
     wrapImages: function(){
+        //var width = 0;
         this.parent.slides.map(function(x){
-            this.domElement.appendChild(x.domElement);
+            //width += x.domElement.width;
+            var diffdiv = document.createElement('div');
+            diffdiv.className = 'slideswell2_diffdiv';
+            diffdiv.style.height = this.parent.domElement.clientHeight + 'px';
+            diffdiv.style.width = (this.parent.domElement.clientHeight * x.ratio) + 'px';
+            diffdiv.appendChild(x.domElement);
+            //this.domElement.appendChild(x.domElement);
+            this.domElement.appendChild(diffdiv);
         },this);
+        //this.domElement.style.width = (width * 1.05) + 'px';
         this.parent.domElement.append(this.domElement);
     },
 
@@ -151,6 +164,8 @@ var WrapperDiv = {
 var Slide = {
     init: function(imgEl){
         this.domElement = imgEl;
+        this.ratio = this.domElement.width/this.domElement.height;
+        console.log(this.ratio);
         this.domElement.className = 'slideswell2_image';
         return this;
     },
