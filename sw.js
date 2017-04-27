@@ -1,15 +1,23 @@
-var SlideSwell = {
+var Slideswell = {
 
     init: function(id, options){
+        var createdChildren;
+
         this.options = options || {};
         this.domElement = document.getElementById(id);
-        this.slides = [];
-        Array.prototype.slice.call(this.domElement.querySelectorAll('img')).map(function(x){
-            this.slides.push(Object.create(Slide).init(x));
-        }, this);
+
+
+
+        // Array.prototype.slice.call(this.domElement.querySelectorAll('img')).map(function(x){
+        //     this.slides.push(Object.create(Slide).init(x));
+        // }, this);
+
+        //this.wrapperDiv = Object.create(WrapperDiv).init(this);
         this.wrapperDiv = Object.create(WrapperDiv).init(this);
+
         this.arrowLeft = Object.create(Arrow).init(this, 'left');
         this.domElement.appendChild(this.arrowLeft.domElement);
+
         this.arrowRight= Object.create(Arrow).init(this, 'right');
         this.domElement.appendChild(this.arrowRight.domElement);
 
@@ -26,7 +34,7 @@ var SlideSwell = {
 
     setStartPosition: function(){
         if(this.options.start){
-            if(this.options.start <= this.slides.length-1){
+            if(this.options.start <= this.wrapperDiv.slides.length-1){
                 this.setPosition(this.options.start);
             }
             else{
@@ -44,13 +52,13 @@ var SlideSwell = {
             newOffset;
 
         //TODO make this less absolute
-        this.slides[this.currentPosition].domElement.className = 'slideswell2_image';
+        this.wrapperDiv.slides[this.currentPosition].domElement.className = 'slideswell2_image';
         this.currentPosition = position;
 
         //the newly selected slide TODO clean this up
-        this.slides[position].domElement.className += "--selected";
+        this.wrapperDiv.slides[position].domElement.className += "--selected";
 
-        slideOffset = this.slides[position].getCenterOffset();
+        slideOffset = this.wrapperDiv.slideContainers[position].getCenterOffset();
         sliderWidth = this.domElement.clientWidth;
         newOffset = slideOffset - sliderWidth/2;
 
@@ -59,11 +67,11 @@ var SlideSwell = {
     },
 
     advancePosition: function(){
-        if( (this.currentPosition + 1) <= this.slides.length - 1 ){
+        if( (this.currentPosition + 1) <= this.wrapperDiv.slides.length - 1 ){
             this.setPosition(this.currentPosition + 1);
             if(this.currentPosition === 1){
                 this.arrowLeft.domElement.style.display = 'block';
-            }else if(this.currentPosition === this.slides.length - 1){
+            }else if(this.currentPosition === this.wrapperDiv.slides.length - 1){
                 this.arrowRight.domElement.style.display = 'none';
             }
         }
@@ -72,7 +80,7 @@ var SlideSwell = {
     returnPosition: function(){
         if( (this.currentPosition - 1) >= 0 ){
             this.setPosition(this.currentPosition - 1);
-            if(this.currentPosition === this.slides.length - 2){
+            if(this.currentPosition === this.wrapperDiv.slides.length - 2){
                 this.arrowRight.domElement.style.display = 'block';
             }else if(this.currentPosition === 0){
                 this.arrowLeft.domElement.style.display = 'none';
@@ -132,28 +140,25 @@ var SlideSwell = {
 };
 
 var WrapperDiv = {
-    init: function(parent){
+    init: function(slideswell){
+        var imgElements = slideswell.domElement.querySelectorAll('img');
+
+        this.parent = slideswell;
         this.domElement = document.createElement('div');
         this.domElement.className = 'slideswell2_image-div';
-        this.parent = parent;
-        this.wrapImages();
-        return this;
-    },
-
-    wrapImages: function(){
-        //var width = 0;
-        this.parent.slides.map(function(x){
-            //width += x.domElement.width;
-            var diffdiv = document.createElement('div');
-            diffdiv.className = 'slideswell2_diffdiv';
-            diffdiv.style.height = this.parent.domElement.clientHeight + 'px';
-            diffdiv.style.width = (this.parent.domElement.clientHeight * x.ratio) + 'px';
-            diffdiv.appendChild(x.domElement);
-            //this.domElement.appendChild(x.domElement);
-            this.domElement.appendChild(diffdiv);
-        },this);
-        //this.domElement.style.width = (width * 1.05) + 'px';
         this.parent.domElement.append(this.domElement);
+
+        this.slideContainers = [];
+        this.slides = [];
+
+        for(var i = 0; i < imgElements.length; i++){
+            var slideContainer = Object.create(SlideContainer).init(this, imgElements[i]);
+            this.slideContainers.push(slideContainer);
+            this.domElement.appendChild(slideContainer.domElement);
+            this.slides.push(slideContainer.slide);
+        }
+
+        return this;
     },
 
     changeOffset: function(newOffset){
@@ -161,8 +166,26 @@ var WrapperDiv = {
     }
 };
 
+var SlideContainer = {
+    init: function(wrapperDiv, imgEl){
+        this.parent = wrapperDiv;
+        this.domElement = document.createElement('div');
+        this.domElement.className = 'slideswell2_slide-container';
+        this.slide = Object.create(Slide).init(this, imgEl);
+        this.domElement.appendChild(this.slide.domElement);
+        this.domElement.style.height = this.parent.parent.domElement.clientHeight + 'px';
+        this.domElement.style.width = (this.parent.parent.domElement.clientHeight * this.slide.ratio) + 'px';
+        return this;
+    },
+
+    getCenterOffset: function(wrapper){
+        return this.domElement.offsetLeft + this.domElement.clientWidth/2;
+    }
+};
+
 var Slide = {
-    init: function(imgEl){
+    init: function(slideContainer, imgEl){
+        this.parent = slideContainer;
         this.domElement = imgEl;
         this.ratio = this.domElement.width/this.domElement.height;
         console.log(this.ratio);

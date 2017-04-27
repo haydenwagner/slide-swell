@@ -11,7 +11,7 @@
 
     <body>
         <div class="container">
-            <div class="slideswell2" style="height: 300px;" id="testSlideswell">
+            <div class="slideswell2" style="height: 270px;" id="testSlideswell">
                 <div style="width:1px;height:100%;background: red;position: absolute;left: calc(50% - 1px);z-index: 100;"></div>
                 <img src="assets/static/test1.jpg"/>
                 <img src="assets/static/test2.jpg"/>
@@ -34,11 +34,11 @@
         <script>
 //            new Slideswell("testSlideswell");
 //            new Flexwell("testFlexwell");
-            var test = Object.create(SlideSwell);
+            var test = Object.create(Slideswell);
             test.init('testSlideswell');
             console.log(test);
 
-            test.slides.forEach(function(x){
+            test.wrapperDiv.slideContainers.forEach(function(x){
                 console.log( x.getCenterOffset() );
             });
 
