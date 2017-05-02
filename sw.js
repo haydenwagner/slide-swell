@@ -158,12 +158,32 @@ var WrapperDiv = {
             this.slides.push(slideContainer.slide);
         }
 
+        var self = this;
+        this.domElement.addEventListener("dragstart", function(e){
+            console.log(e);
+            self.dragx1 = e.clientX;
+        });
+
+        this.domElement.addEventListener("dragend", function(e){
+            console.log(e);
+            self.dragx2 = e.clientX;
+            console.log(self.dragx2 - self.dragx1);
+            self.addOffset(self.dragx2 - self.dragx1);
+        });
+
         return this;
     },
 
     changeOffset: function(newOffset){
         this.domElement.style.left = -newOffset + 'px';
+    },
+
+    addOffset: function(addedOffset){
+        var left = parseInt(this.domElement.style.left, 10);
+        this.domElement.style.left = left + addedOffset + 'px';
     }
+
+
 };
 
 var SlideContainer = {
