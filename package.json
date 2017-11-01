@@ -1,0 +1,19 @@
+{
+  "scripts": {
+    "build": "webpack --progress",
+    "build-watch": "webpack --watch --progress"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.0.0-beta.4",
+    "autoprefixer-loader": "^3.2.0",
+    "babel-core": "^7.0.0-beta.3",
+    "babel-loader": "^7.1.2",
+    "css-loader": "^0.28.5",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "html-loader": "^0.5.1",
+    "less": "^2.3.1",
+    "less-loader": "^4.0.5",
+    "style-loader": "^0.18.2",
+    "webpack": "^3.5.5"
+  }
+}

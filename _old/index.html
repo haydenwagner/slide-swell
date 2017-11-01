@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <title>slide-swell demo</title>
+        <!--<link rel="stylesheet" type="text/css" href="slideswell.css"> -->
+        <link rel="stylesheet" type="text/css" href="assets/styles.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="slideswell2" style="height: 270px;" id="testSlideswell">
+                <div style="width:1px;height:100%;background: red;position: absolute;left: calc(50% - 1px);z-index: 100;"></div>
+                <img src="assets/static/test1.jpg"/>
+                <img src="assets/static/test2.jpg"/>
+                <img src="assets/static/test3.jpg"/>
+            </div>
+        </div>
+
+        <!--<div class="container">-->
+            <!--<div class="slideswell" style="height: 300px;" id="testFlexwell">-->
+                <!--<img src="assets/static/test1.jpg"/>-->
+                <!--<img src="assets/static/test2.jpg"/>-->
+                <!--<img src="assets/static/test3.jpg"/>-->
+            <!--</div>-->
+        <!--</div>-->
+
+
+        <script src="slideswell.js"></script>
+        <script src="flexwell.js"></script>
+        <script src="sw.js"></script>
+        <script>
+//            new Slideswell("testSlideswell");
+//            new Flexwell("testFlexwell");
+            var test = Object.create(Slideswell);
+            test.init('testSlideswell');
+            console.log(test);
+
+            test.wrapperDiv.slideContainers.forEach(function(x){
+                console.log( x.getCenterOffset() );
+            });
+
+            //test.advancePosition();
+        </script>
+    </body>
+</html>
